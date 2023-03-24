@@ -24,9 +24,6 @@ from .nearest_neighbours import params_for_all_galaxies
 
 ## Loading some global data once as it will be used many times
 archetype_galaxies = params_for_all_galaxies() ## Dictionary for ELG, LRG, BGS
-## Dictionary of galaxy properties of archetypes
-rrarchs_params = return_galaxy_archetype_properties('/global/cfs/cdirs/desi/users/abhijeet/new-archetypes/rrarchetype-galaxy.fits') 
-
 
 class Archetype():
     """Class to store all different archetypes from the same spectype.
@@ -51,7 +48,7 @@ class Archetype():
         self._subtype = np.char.add(np.char.add(self._subtype,'_'),np.arange(self._narch,dtype=int).astype(str))
         self._full_type = np.char.add(self._rrtype+':::',self._subtype)
         self._version = hdr['VERSION']
-
+        self.filename = filename
         self.wave = np.asarray(hdr['CRVAL1'] + hdr['CDELT1']*np.arange(self.flux.shape[1]))
         if hdr['LOGLAM']:
             self.wave = 10**self.wave
@@ -128,7 +125,8 @@ class Archetype():
             spectype = self._full_type[iBest].split(':::')[0] #redrock best spectype
             subtype = self._full_type[iBest].split(':::')[1].split('_')[0] #redrock best subtype
             if spectype=='GALAXY':
-                new_arch, gal_inds = return_N_nearest_archetypes_from_synthetic_spectra(arch_id=iBest, archetype_data=rrarchs_params, gal_data=archetype_galaxies[subtype], n_nbh=n_nbh, ret_wave=False)
+                rrarchs_params = return_galaxy_archetype_properties(self.filename) 
+                new_arch, gal_inds = return_N_nearest_archetypes_from_synthetic_spectra(arch_id=iBest, archetype_data=rrarchs_params, gal_data=archetype_galaxies[subtype], n_nbh=n_nbh)
                 new_arch = new_arch.astype('float64') # to let it work with trapz_rebin and Numba
                 for i in range(n_nbh):
                     binned = {hs:trapz_rebin(self.wave*(1.+z), new_arch[i], wave) for hs, wave in dwave.items()}
