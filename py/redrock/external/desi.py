@@ -560,7 +560,7 @@ def rrdesi(options=None, comm=None):
     parser.add_argument("--nearest_nbh", default=False, action="store_true",
         required=False, help="Will apply the nearest neighbour approach on archetypes")
     
-    parser.add_argument("-n_nbh", type=int, default=9,
+    parser.add_argument("-n_nbh", "--n_smallest", type=int, default=9,
         required=False, help="if nearest_nbh True, N-nearest neighbours taken into account (default is 9)")
 
     parser.add_argument("-d", "--details", type=str, default=None,
@@ -701,10 +701,10 @@ def rrdesi(options=None, comm=None):
                     comm.Abort()
                 else:
                     sys.exit(1)
-            print('\n=================\n')    
-            print('Archetype with galaxy properties is provided\n')
-            print('Nearest neighbour approach is provided, so will apply the N-nearest neighbour approach on Redrock\n')
-            print('%d nearest neighbours will be used...\n'%(args.n_nbh))
+            print('\n=================\n')       
+            print('REDSHIFT: Archetype with galaxy properties is provided\n')
+            print('REDSHIFT: Nearest neighbour approach is provided, so will apply the N-nearest neighbour approach on Redrock\n')
+            print('REDSHIFT: %d nearest neighbours will be used...\n'%(args.n_nbh))
             print('===================\n')
             
     
